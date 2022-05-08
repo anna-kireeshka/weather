@@ -26,13 +26,20 @@ export default class MainPage extends Vue {}
 </script>
 
 <style scoped lang="scss">
-.home-wrap {
+@mixin min-desctop {
+  @media screen and (max-width: 1128px) {
+    width: 70%;
+  }
+}
+@mixin flex-column {
   display: flex;
   flex-direction: column;
 }
+.home-wrap {
+  @include flex-column;
+}
 .main-content {
-  display: flex;
-  flex-direction: column;
+  @include flex-column;
 
   width: 40%;
   margin: 100px auto;
@@ -40,6 +47,7 @@ export default class MainPage extends Vue {}
   background-color: #ecdbf8;
   box-shadow: -4px 6px 4px -3px #987ec7;
   border-radius: 7px;
+  @include min-desctop;
   &__title {
     font-size: 2rem;
     margin-bottom: 1rem;
