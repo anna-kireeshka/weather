@@ -36,7 +36,7 @@ export default class PageTime extends Vue {
   get time(): string {
     let minutes: number = this.date.getMinutes();
     let hours: number = this.date.getHours();
-    return `${hours} : ${minutes < 10 ? "0" : "" + minutes}`;
+    return `${hours} : ${minutes < 10 ? "0" : ""}${minutes}`;
   }
 
   /** Получить полную дату */
