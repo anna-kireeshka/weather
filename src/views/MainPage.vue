@@ -31,6 +31,11 @@ export default class MainPage extends Vue {}
     width: 70%;
   }
 }
+@mixin mobile {
+  @media screen and (max-width: 650px) {
+    width: 95%;
+  }
+}
 @mixin flex-column {
   display: flex;
   flex-direction: column;
@@ -40,7 +45,6 @@ export default class MainPage extends Vue {}
 }
 .main-content {
   @include flex-column;
-
   width: 40%;
   margin: 100px auto;
   padding: 50px;
@@ -48,12 +52,18 @@ export default class MainPage extends Vue {}
   box-shadow: -4px 6px 4px -3px #987ec7;
   border-radius: 7px;
   @include min-desctop;
+  @include mobile;
   &__title {
     font-size: 2rem;
     margin-bottom: 1rem;
+    @media screen and (max-width: 650px) {
+      font-size: 1rem;
+    }
   }
   &__text {
-    font-size: 1.4rem;
+    @media screen and (max-width: 650px) {
+      font-size: 0.8rem;
+    }
   }
 }
 </style>

@@ -10,6 +10,7 @@
           v-model="searchCountry"
           v-on:keyup.enter="goSearch"
         />
+        <button class="weather__action" @click="resetSearchQuery">x</button>
       </div>
       <div v-if="isLoaded && !isError" class="weather__info">
         <div class="location">
@@ -103,6 +104,9 @@ export default class PageWeather extends Vue {
       this.isLoaded = true;
     }
   }
+  resetSearchQuery() {
+    this.searchCountry = "";
+  }
 }
 </script>
 
@@ -136,10 +140,14 @@ export default class PageWeather extends Vue {
   @include mobile;
 
   &__search-box {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    width: 60%;
+    @include min-desctop;
+    @include mobile;
   }
   &__search-input {
-    width: 60%;
     background-color: #faf7fc;
     padding: 20px 40px;
     border: none;
@@ -149,6 +157,10 @@ export default class PageWeather extends Vue {
     @include mobile;
   }
   &__search-input[type="text"] {
+    width: 100%;
+    @media screen and (max-width: 650px) {
+      font-size: 1rem;
+    }
     font-size: 1.5rem;
     color: #634085;
   }
@@ -156,6 +168,24 @@ export default class PageWeather extends Vue {
   &__search-input:hover {
     border-radius: 10px 0 10px 0;
     box-shadow: 1px 3px 20px 1px #c39ee7;
+  }
+  &__action {
+    padding: 20px;
+    background-color: #7b25c0;
+    color: #faf7fc;
+    border-radius: 10px 0 10px 0;
+    border: none;
+    margin-left: 10px;
+    outline: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    @media screen and (max-width: 650px) {
+      font-size: 1rem;
+    }
+  }
+  &__action:hover {
+    background-color: #c78ff6;
+    color: #faf7fc;
   }
   &__info {
     display: flex;
