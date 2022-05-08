@@ -87,6 +87,7 @@ export default class PageWeather extends Vue {
         this.wingSpeed = response.data.wind.speed;
         let weatherTypeEng = response.data.weather[0].main;
         this.weatherType = this.weatherTypeRuTranslit[weatherTypeEng];
+        this.countryName = response.data.name
       })
 
       .catch((err) => {
@@ -103,7 +104,6 @@ export default class PageWeather extends Vue {
       this.$router.push({ query: { search: this.searchCountry } });
       this.getCallApi();
       this.isLoaded = true;
-      this.countryName = this.searchCountry;
     }
   }
   resetSearchQuery() {
