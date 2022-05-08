@@ -11,7 +11,7 @@
           v-on:keyup.enter="goSearch"
         />
       </div>
-      <div v-if="isLoaded" class="weather__info">
+      <div v-if="isLoaded && !isError" class="weather__info">
         <div class="location">
           <p class="location__city">
             {{ searchCountry }}
@@ -30,6 +30,12 @@
           </p>
         </div>
       </div>
+      <div class="err" v-if="isError && !this.isLoaded">
+        <p class="err__message">
+          Нет результатов по такому запросу. <br />
+          Проверьте правильность написания города
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -47,6 +53,7 @@ export default class PageWeather extends Vue {
   apiKey: NodeJS.Process = process.env.VUE_APP_WEATHER_API;
   url: NodeJS.Process = process.env.VUE_APP_WEATHER_URL;
   isLoaded: boolean = false;
+  isError: boolean = false;
   searchCountry: string = "";
   temp: number = 0;
   tempFeelLikes: number = 0;
@@ -71,6 +78,8 @@ export default class PageWeather extends Vue {
       )
       .then((response: AxiosResponse) => {
         this.result = response.data;
+        this.isLoaded = true;
+        this.isError = false;
         this.temp = Math.round(response.data.main.temp);
         this.tempFeelLikes = Math.round(response.data.main.feels_like);
         this.wingSpeed = response.data.wind.speed;
@@ -78,16 +87,18 @@ export default class PageWeather extends Vue {
         this.weatherType = this.weatherTypeRuTranslit[weatherTypeEng];
       })
 
-      .catch(() =>
-        alert(
-          "Данные не загрузились или отсутствуют, попробуйте перезагрузить страницу"
-        )
-      );
+      .catch((err) => {
+        if ((err.code = 404)) {
+          this.isError = true;
+          this.isLoaded = false;
+        }
+      });
   }
 
   /** Поиск */
   goSearch(event: KeyboardEvent) {
     if (event.key === "Enter" && this.searchCountry) {
+      this.$router.push({ query: { search: this.searchCountry } });
       this.getCallApi();
       this.isLoaded = true;
     }
@@ -96,12 +107,33 @@ export default class PageWeather extends Vue {
 </script>
 
 <style scoped lang="scss">
+@mixin border-style {
+  width: 60%;
+  border-radius: 7px;
+}
+@mixin font-medium {
+  font-size: 1rem;
+  font-weight: 500;
+}
+@mixin min-desctop {
+  @media screen and (max-width: 1128px) {
+    width: 70%;
+  }
+}
+@mixin mobile {
+  @media screen and (max-width: 650px) {
+    width: 95%;
+  }
+}
+
 .weather {
   width: 50%;
   background: linear-gradient(#ead9fa, #9dd3e380);
   margin: 100px auto;
   padding: 30px;
   border-radius: 7px;
+  @include min-desctop;
+  @include mobile;
 
   &__search-box {
     text-align: center;
@@ -113,6 +145,8 @@ export default class PageWeather extends Vue {
     border: none;
     border-radius: 10px 0 10px 0;
     outline: none;
+    @include min-desctop;
+    @include mobile;
   }
   &__search-input[type="text"] {
     font-size: 1.5rem;
@@ -131,10 +165,11 @@ export default class PageWeather extends Vue {
   }
 }
 .location {
-  width: 60%;
-  margin:40px auto 20px;
+  @include border-style;
+  margin: 40px auto 20px;
   background-color: #d6b5f5;
-  border-radius: 7px;
+  @include min-desctop;
+  @include mobile;
 
   &__city {
     font-size: 2rem;
@@ -143,11 +178,13 @@ export default class PageWeather extends Vue {
   }
 }
 .temperature {
-  width: 60%;
+  @include border-style;
   margin: auto 0 20px;
   padding: 30px 50px;
   background-color: rgba(157, 211, 227, 0.5);
-  border-radius: 7px;
+
+  @include min-desctop;
+  @include mobile;
   &__count {
     font-size: 90px;
     font-weight: 900;
@@ -157,24 +194,45 @@ export default class PageWeather extends Vue {
     margin-bottom: 10px;
   }
   &__type {
-    font-size: 30px;
+    font-size: 1.5rem;
+    font-weight: 500;
     color: #634085;
     text-align: center;
   }
 }
-.additionally {
+.additionally,
+.err {
   display: flex;
-  width: 60%;
   justify-content: space-between;
+  width: 60%;
   margin: 0 auto;
+
+  @media screen and (max-width: 1128px) {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+  }
+  @include mobile;
   &__text-block {
+    @include font-medium;
     padding: 30px;
     background-color: #bedef3;
     border-radius: 7px;
 
     color: #634085;
-    font-size: 1rem;
-    font-weight: 500;
+    @media screen and (max-width: 1128px) {
+      margin-bottom: 20px;
+    }
+  }
+}
+.err {
+  @include border-style;
+  margin-top: 20px;
+  padding: 30px 50px;
+  background-color: #e78497;
+  &__message {
+    @include font-medium;
+    color: #421f28;
   }
 }
 </style>

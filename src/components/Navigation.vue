@@ -30,6 +30,11 @@ export default class Navigation extends Vue {
 </script>
 
 <style scoped lang="scss">
+@mixin mobile {
+  @media screen and (max-width: 650px) {
+    font-size: 1rem;
+  }
+}
 .navigation {
   width: 100vw;
   background-color: #ecdbf8;
@@ -46,6 +51,7 @@ export default class Navigation extends Vue {
     text-decoration: none;
     color: #2f263f;
     margin-right: 60px;
+    @include mobile;
   }
   &__link:hover,
   &__link--active {
