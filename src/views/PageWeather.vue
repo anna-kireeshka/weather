@@ -15,7 +15,7 @@
       <div v-if="isLoaded && !isError" class="weather__info">
         <div class="location">
           <p class="location__city">
-            {{ searchCountry }}
+            {{ countryName }}
           </p>
         </div>
         <div class="temperature">
@@ -56,6 +56,7 @@ export default class PageWeather extends Vue {
   isLoaded: boolean = false;
   isError: boolean = false;
   searchCountry: string = "";
+  countryName: string = "";
   temp: number = 0;
   tempFeelLikes: number = 0;
   wingSpeed: number = 0;
@@ -102,6 +103,7 @@ export default class PageWeather extends Vue {
       this.$router.push({ query: { search: this.searchCountry } });
       this.getCallApi();
       this.isLoaded = true;
+      this.countryName = this.searchCountry;
     }
   }
   resetSearchQuery() {
